@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+coverage
+.next
+.angular
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
