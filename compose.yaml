@@ -11,6 +11,7 @@ services:
     environment:
       NODE_ENV: development
       MONGODB_URI: ${MONGODB_URI:-mongodb://app:app@db:27017/pizza-ya?authSource=admin}
+      API_URL: http://api:3000
     depends_on:
       db:
         condition: service_healthy
