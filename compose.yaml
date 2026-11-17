@@ -11,6 +11,9 @@ services:
     environment:
       NODE_ENV: development
       MONGODB_URI: ${MONGODB_URI:-mongodb://app:app@db:27017/pizza-ya?authSource=admin}
+      API_URL: http://api:3000
+      AUTH_USUARIO: ${AUTH_USUARIO:-operador}
+      AUTH_CONTRASENA: ${AUTH_CONTRASENA:-pizza-ya}
     depends_on:
       db:
         condition: service_healthy
@@ -26,9 +29,13 @@ services:
     environment:
       NODE_ENV: development
       MONGODB_URI: ${MONGODB_URI:-mongodb://app:app@db:27017/pizza-ya?authSource=admin}
+      JWT_SECRET: ${JWT_SECRET:-secreto-demo-cambiar-en-produccion}
+      AUTH_USUARIO: ${AUTH_USUARIO:-operador}
+      AUTH_CONTRASENA: ${AUTH_CONTRASENA:-pizza-ya}
     depends_on:
       db:
         condition: service_healthy
+
   db:
     image: mongo:7.0.14
     ports:
