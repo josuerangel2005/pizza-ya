@@ -10,7 +10,7 @@ export class LoginDto {
   @IsNotEmpty({ message: 'El campo usuario es obligatorio' })
   usuario!: string;
 
-  @ApiProperty({ example: 'pizza-ya', description: 'Contraseña del usuario' })
+  @ApiProperty({ example: '********', description: 'Contraseña del usuario' })
   @IsString()
   @IsNotEmpty({ message: 'El campo contrasena es obligatorio' })
   contrasena!: string;

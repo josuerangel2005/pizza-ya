@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService } from '../jwt.service';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -20,7 +20,7 @@ export class JwtAuthGuard implements CanActivate {
     }
     const token = autorizacion.slice('Bearer '.length);
     try {
-      peticion.usuario = this.jwtService.verify(token);
+      peticion.usuario = this.jwtService.verificar(token);
       return true;
     } catch {
       throw new UnauthorizedException(

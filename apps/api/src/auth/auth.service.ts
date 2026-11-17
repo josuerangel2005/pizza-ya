@@ -1,26 +1,34 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
-
-const USUARIO_DEMO = process.env.AUTH_USUARIO ?? 'operador';
-const CONTRASENA_DEMO = process.env.AUTH_CONTRASENA ?? 'pizza-ya';
-const ROL_DEMO = 'operador';
+import { JwtService } from './jwt.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  private readonly usuario: string;
+
+  private readonly contrasena: string;
+
+  constructor(private readonly jwtService: JwtService) {
+    if (!process.env.AUTH_USUARIO || !process.env.AUTH_CONTRASENA) {
+      throw new Error(
+        'Las variables de entorno AUTH_USUARIO y AUTH_CONTRASENA son obligatorias',
+      );
+    }
+    this.usuario = process.env.AUTH_USUARIO;
+    this.contrasena = process.env.AUTH_CONTRASENA;
+  }
 
   iniciarSesion(credenciales: LoginDto): { accessToken: string } {
     if (
-      credenciales.usuario !== USUARIO_DEMO ||
-      credenciales.contrasena !== CONTRASENA_DEMO
+      credenciales.usuario !== this.usuario ||
+      credenciales.contrasena !== this.contrasena
     ) {
       throw new UnauthorizedException('Usuario o contraseña incorrectos');
     }
     return {
-      accessToken: this.jwtService.sign({
+      accessToken: this.jwtService.firmar({
         sub: credenciales.usuario,
-        rol: ROL_DEMO,
+        rol: 'operador',
       }),
     };
   }

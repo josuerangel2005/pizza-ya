@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService } from '../src/auth/jwt.service';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -71,7 +71,7 @@ describe('Autenticación (e2e)', () => {
 
   it('GET /ingredientes/stock-bajo con token de un rol sin permiso devuelve 403', async () => {
     const jwtService = app.get(JwtService);
-    const token = jwtService.sign({ sub: 'otro', rol: 'proveedor' });
+    const token = jwtService.firmar({ sub: 'otro', rol: 'proveedor' });
 
     const respuesta = await request(app.getHttpServer())
       .get('/ingredientes/stock-bajo')

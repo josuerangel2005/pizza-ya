@@ -15,6 +15,10 @@ import { parseHtml, texto, outerHtml } from "./dom.mjs";
 
 const webRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+// El código de la página exige credenciales por entorno; las provee la prueba.
+process.env.AUTH_USUARIO = process.env.AUTH_USUARIO ?? "operador";
+process.env.AUTH_CONTRASENA = process.env.AUTH_CONTRASENA ?? "pizza-ya";
+
 // Transpila el código de la página a CommonJS para poder ejecutarlo en Node.
 execFileSync(
   process.execPath,
