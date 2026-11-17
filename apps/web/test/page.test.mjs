@@ -111,11 +111,24 @@ test("S4: si la lista está vacía, la página muestra 'No hay ingredientes con 
   );
 });
 
-test("integración: la página principal consume GET /ingredientes/stock-bajo y arma el encabezado y la tabla", async () => {
+test("integración: la página inicia sesión en el backend y consume GET /ingredientes/stock-bajo con el token", async () => {
   const fetchOriginal = globalThis.fetch;
   let urlSolicitada;
-  globalThis.fetch = async (url) => {
-    urlSolicitada = url;
+  let tokenEnviado;
+  globalThis.fetch = async (url, opciones) => {
+    const urlTexto = String(url);
+    if (urlTexto.endsWith("/auth/login")) {
+      assert.equal(opciones?.method, "POST", "el inicio de sesión debe ser POST /auth/login");
+      const credenciales = JSON.parse(opciones.body);
+      assert.equal(credenciales.usuario, "operador");
+      assert.equal(credenciales.contrasena, "pizza-ya");
+      return {
+        ok: true,
+        json: async () => ({ accessToken: "token-de-prueba" }),
+      };
+    }
+    urlSolicitada = urlTexto;
+    tokenEnviado = opciones?.headers?.Authorization;
     return { ok: true, json: async () => datosEjemplo };
   };
   try {
@@ -141,6 +154,11 @@ test("integración: la página principal consume GET /ingredientes/stock-bajo y 
       String(urlSolicitada),
       /\/ingredientes\/stock-bajo$/,
       "la página debe pedir GET /ingredientes/stock-bajo al backend",
+    );
+    assert.equal(
+      tokenEnviado,
+      "Bearer token-de-prueba",
+      "la página debe enviar el token del inicio de sesión en el encabezado Authorization",
     );
     const document = parseHtml(html);
     const header = document.querySelector("header");
